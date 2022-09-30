@@ -33,56 +33,39 @@ class Board:
         return moves
 
     def need_in_row(self):
-        if self.size == 3:
-            return 3
-        elif self.size == 4:
-            return 4
-        else:
-            return 5
+        return self.size if (self.size == 3 or self.size == 4) else return 5
 
     def is_valid_coordinates(self, i, j):
         return min(i, j) >= 0 and max(i, j) < self.size
+    
+    def check_valid_winning(self, i, j, need, player):
+	    if not self.is_valid_coordinates(i, j):
+            return False
+        if self.board[i][j] != player:
+            return False
+        if need == 1:
+            return True
+	    return None
 
     # -
     def win_horizontal(self, i, j, need, player):
-        if not self.is_valid_coordinates(i, j):
-            return False
-        if self.board[i][j] != player:
-            return False
-        if need == 1:
-            return True
-        return self.win_horizontal(i, j + 1, need - 1, player)
+        is_valid = check_valid_winning(self, i, j, need, player)
+	    return is_valid if is_valid is not None else self.win_horizontal(i, j + 1, need - 1, player)
 
     # |
     def win_vertical(self, i, j, need, player):
-
-        if not self.is_valid_coordinates(i, j):
-            return False
-        if self.board[i][j] != player:
-            return False
-        if need == 1:
-            return True
-        return self.win_vertical(i + 1, j, need - 1, player)
+        is_valid = check_valid_winning(self, i, j, need, player)
+	    return is_valid if is_valid is not None else self.win_vertical(i + 1, j, need - 1, player) 
 
     # \
     def win_diagonal(self, i, j, need, player):
-        if not self.is_valid_coordinates(i, j):
-            return False
-        if self.board[i][j] != player:
-            return False
-        if need == 1:
-            return True
-        return self.win_diagonal(i + 1, j + 1, need - 1, player)
+        is_valid = check_valid_winning(self, i, j, need, player)
+	    return is_valid if is_valid is not None else self.win_diagonal(i + 1, j + 1, need - 1, player)
 
     # /
     def win_diagonal_reverse(self, i, j, need, player):
-        if not self.is_valid_coordinates(i, j):
-            return False
-        if self.board[i][j] != player:
-            return False
-        if need == 1:
-            return True
-        return self.win_diagonal_reverse(i - 1, j + 1, need - 1, player)
+	    is_valid = check_valid_winning(self, i, j, need, player)
+	    return is_valid if is_valid is not None else self.win_diagonal_reverse(i - 1, j + 1, need - 1, player)
 
     def get_winner(self):
         need = self.need_in_row()
